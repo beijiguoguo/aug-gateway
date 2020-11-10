@@ -52,8 +52,8 @@ public class HttpApiHandler extends AbstractHttpHandler {
                             return;
                         }
 
-                        HttpUrl.Builder builder = HttpUtils.generateHttpUrlBuilder(exchange, serviceInfo);
-                        Request request = HttpUtils.generateRequest(exchange, serviceCode, builder, s);
+                        HttpUrl httpUrl = HttpUtils.generateHttpUrl(exchange, serviceInfo, serviceCode);
+                        Request request = HttpUtils.generateRequest(exchange, httpUrl, s);
 
                         Response response = HttpUtils.proxyRequest(request);
                         HttpUtils.sendOriginalResponse(exchange, response);

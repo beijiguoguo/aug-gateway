@@ -26,6 +26,7 @@ public class WebSocketHandler implements WebSocketConnectionCallback, StreamMsgP
 
     @Override
     public void onConnect(WebSocketHttpExchange webSocketHttpExchange, WebSocketChannel webSocketChannel) {
+//        webSocketHttpExchange.getRequestParameters()
         String clientId = StringUtils.uuid();
         WebSocketClient client =
                 new WebSocketClient()
@@ -33,7 +34,6 @@ public class WebSocketHandler implements WebSocketConnectionCallback, StreamMsgP
                         .setWebSocketChannel(webSocketChannel)
                         .setLastHeartbeatAt(System.currentTimeMillis());
         clients.put(clientId, client);
-
         webSocketChannel.getReceiveSetter().set(new AbstractReceiveListener() {
             @Override
             protected void onFullTextMessage(WebSocketChannel channel, BufferedTextMessage message) {

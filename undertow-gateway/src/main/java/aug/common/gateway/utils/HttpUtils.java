@@ -50,7 +50,7 @@ public class HttpUtils {
         return PROCESSOR;
     }
 
-    public static HttpUrl.Builder generateHttpUrlBuilder(HttpServerExchange exchange, @NonNull ServiceInfo serviceInfo) {
+    public static HttpUrl generateHttpUrl(HttpServerExchange exchange, @NonNull ServiceInfo serviceInfo,ServiceCode serviceCode) {
         HttpUrl.Builder builder = new HttpUrl.Builder()
                 .scheme("http")
                 .host(serviceInfo.getHost())
@@ -64,19 +64,15 @@ public class HttpUtils {
                 }
             }
         }
-        return builder;
-    }
-
-    public static Request generateRequest(HttpServerExchange exchange, ServiceCode serviceCode, HttpUrl.Builder builder, String bodyString) {
         String requestPath =
                 exchange.getRequestPath()
                         .replace(serviceCode.contextPath, serviceCode.replacement);
 
-        Request.Builder requestBuilder =
-                new Request.Builder()
-                        .url(
-                                builder.addPathSegments(requestPath).build()
-                        );
+        return builder.addPathSegments(requestPath).build();
+    }
+
+    public static Request generateRequest(HttpServerExchange exchange, HttpUrl httpUrl, String bodyString) {
+        Request.Builder requestBuilder = new Request.Builder().url(httpUrl);
 
         HttpString requestMethod = exchange.getRequestMethod();
         if (METHOD_GET.equals(requestMethod)) {

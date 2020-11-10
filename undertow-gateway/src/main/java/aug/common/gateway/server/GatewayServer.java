@@ -32,12 +32,15 @@ public class GatewayServer {
     }
 
     public void start() {
-        // 默认处理器，匹配不到路径的时候走这里
         PathHandler pathHandler =
+                // 默认处理器，匹配不到路径的时候走这里
                 Handlers.path(HttpUtils::send404Error)
+                        // http请求处理器
                         .addPrefixPath("/api", httpApiHandler)
-                        .addExactPath("/ws", Handlers.websocket(webSocketHandler))
-                        .addExactPath("/sse", Handlers.serverSentEvents(sseHandler));
+                        // websocket请求处理器
+                        .addPrefixPath("/ws", Handlers.websocket(webSocketHandler))
+                        // sse请求处理器
+                        .addPrefixPath("/sse", Handlers.serverSentEvents(sseHandler));
 
         server = Undertow.builder()
                 .addHttpListener(port, "0.0.0.0")

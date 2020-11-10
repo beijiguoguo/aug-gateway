@@ -37,13 +37,15 @@ public class PropertiesHelper {
 
     public ServiceInfo getServiceInfo(ServiceCode serviceCode) {
         List<ServiceInfo> services = servicesRef.get().get(serviceCode);
-        List<ServiceInfo> onlineServices = services.parallelStream()
-                .filter(serviceConfig -> ServiceInfo.ServiceStatus.ONLINE.equals(serviceConfig.getStatus()))
-                .collect(Collectors.toList());
+        List<ServiceInfo> onlineServices =
+                services.parallelStream()
+                        .filter(serviceConfig -> ServiceInfo.ServiceStatus.ONLINE.equals(serviceConfig.getStatus()))
+                        .collect(Collectors.toList());
         if (CollectionUtils.isEmpty(onlineServices)) {
             // 该服务集群全部离线
             return null;
         }
+        // 随机分配一个在线的服务
         return onlineServices.get(random.nextInt(onlineServices.size()));
 
     }
